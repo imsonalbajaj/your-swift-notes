@@ -4,6 +4,10 @@
 
 - `clipsToBounds = true` - affects the view's subviews — anything that extends outside the view's bounds will be cut off.
 
+### Geometry
+- frame → position & size in superview’s coordinates.
+- bounds → internal coordinate system (usually (0,0)).
+
 ### Initialization
 
 - `init(frame:)` - gets called when you are making view programmatically
