@@ -67,14 +67,12 @@
 
 # iOS architecture
 
-
-
 iOS follows a layered architecture, where each layer builds on the services of the one below it. 
 
 Layer hierarchy:  Cocoa Touch(top level) → Media → Core Services → Core OS(bottom level)
 
 
-### 1️⃣ Core OS Layer (Bottommost Layer)
+## 1️⃣ Core OS Layer (Bottommost Layer)
 This is the foundation of iOS where low-level components and system-level services reside.
 
 Key Components:
@@ -84,26 +82,33 @@ Key Components:
     Handle communication with hardware components such as the camera, microphone, and sensors.
 - Security: Implements app sandboxing, manages trusted execution, encryption, and secure boot
 - LibSystem: A C-based library providing fundamental system services like threading, networking, and file handling.
+- File Management System(APFS)
 
 
-### 2️⃣ Core Services Layer
+## 2️⃣ Core Services Layer
 Provides system-level services and APIs that apps rely on
 
 Key Components:
-- Core Foundation Services: Low-level data management, preferences, and utility APIs.
+- Core Foundation Services and Foundation Framework: Low-level data management, preferences, and utility APIs.
 - Databases: Includes Core Data and SqLite support.
 - Networking Services: Uses CFNetwork high level networking api.
 - File System Access: Provides structured file handling APIs.
 - Concurrency: GCD (Grand Central Dispatch) and NSOperationQueue built on this layer.
+- Core Location:
+    Access geolocation data
+- AddressBook:
+    Access contacts and events
+- Core Motion: Access accelerometer and gyroscope data
+- CloudKit: Sync data using icloud
 
 
-### 3️⃣ Media Layer
+## 3️⃣ Media Layer
 Responsible for graphics, animation, audio, and video—everything that creates the visual and rich multimedia experience.
 
 
 Key Components:
 - Graphics:
-	*	Core Graphics (Quartz 2D): 2D drawing and rendering. - used to draw line, quadriterals etc
+	*	Core Graphics (Quartz 2D): 2D drawing and rendering. - used to draw line, quadrilaterals etc
 	*	Metal: High-performance graphics and GPU-based rendering (used in games and 3D apps).
 	*	Core Image: Used to alter the image
 
@@ -115,12 +120,18 @@ Key Components:
 	*	Core Audio, AVFoundation for Playback, recording, and processing of audio.
 	*	AVFoundation for Video capture, playback, and editing.
 
-### 4️⃣ Cocoa Touch Layer (Topmost Layer)
+- Core Text:
+Advanced text layout and font rendering.
+- Core Video:
+    For frame-by-frame video processing.
+- SpriteKit / SceneKit:
+For 2D/3D game rendering and animations.
+
+
+## 4️⃣ Cocoa Touch Layer (Topmost Layer)
 The application layer, where developers interact with iOS APIs to build apps
 
-
 Key Components:
-
 
 -	UI Frameworks:
     *	UIKit: imperative UI framework.
@@ -134,6 +145,15 @@ Key Components:
 -	Auto Layout: Handles responsive and adaptive layout for different screen sizes.
 -	Other Services: Notifications, multitasking, and accessibility APIs.
 
+- MapKit: Embeds interactive maps and annotations.
+- MessageUI: Send emails or SMS from within apps.
+- HealthKit / HomeKit: Access health data or control Home automation devices.
+- UserNotifications: Handle local and push notifications.
+- App Lifecycle Management:
+Includes UIApplication, AppDelegate, and SceneDelegate for app startup, state transitions, and termination.
+- Multitasking & Background Execution:
+APIs for background fetch, audio playback, and location updates.
+
 
 
 NOTE:
@@ -145,4 +165,42 @@ LibSystem (C Networking APIs)
 CFNetwork (Foundation-level networking)
    ↓
 URL Loading System (NSURLSession, Swift APIs)
+```
+
+FLOW Diagram:
+```
+
+📱 User Interaction
+        ↓
+👆 Cocoa Touch Layer
+    ├─ UIKit / SwiftUI → Build UI, handle events, manage view controllers
+    ├─ UserNotifications / MapKit / HealthKit
+    └─ Interacts with system APIs via Core Services
+
+        ↓
+🎛️ Media Layer
+    ├─ Core Graphics / Core Animation → Draw and animate visuals
+    ├─ Metal / Core Image → GPU-based rendering and image processing
+    └─ AVFoundation / Core Audio → Play, record, and process media
+
+        ↓
+⚙️ Core Services Layer
+    ├─ Core Data / SQLite → Data persistence
+    ├─ CFNetwork / Foundation → Networking and utilities
+    ├─ Core Location / Core Motion → Sensors & GPS
+    ├─ GCD / OperationQueue → Concurrency
+    └─ Provides APIs used by upper layers
+
+        ↓
+🧩 Core OS Layer
+    ├─ XNU Hybrid Kernel (Mach + FreeBSD)
+    ├─ Device Drivers → Camera, sensors, display
+    ├─ Security Framework → Sandboxing, encryption
+    ├─ LibSystem → C-based low-level APIs (threading, sockets)
+    └─ APFS File System, Power Management, Bluetooth
+
+        ↓
+💾 Hardware
+    (CPU, GPU, Memory, Sensors, Battery, Network Interfaces)
+
 ```
