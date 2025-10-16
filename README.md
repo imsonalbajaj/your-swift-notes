@@ -70,6 +70,7 @@
 
 
 iOS follows a layered architecture, where each layer builds on the services of the one below it. 
+
 Layer hierarchy:  Cocoa Touch(top level) → Media → Core Services → Core OS(bottom level)
 
 
@@ -98,6 +99,8 @@ Key Components:
 
 ### 3️⃣ Media Layer
 Responsible for graphics, animation, audio, and video—everything that creates the visual and rich multimedia experience.
+
+
 Key Components:
 - Graphics:
 	*	Core Graphics (Quartz 2D): 2D drawing and rendering. - used to draw line, quadriterals etc
@@ -114,12 +117,14 @@ Key Components:
 
 ### 4️⃣ Cocoa Touch Layer (Topmost Layer)
 The application layer, where developers interact with iOS APIs to build apps
+
+
 Key Components:
 
 
 -	UI Frameworks:
-	    *	UIKit: imperative UI framework.
-	    *	SwiftUI: declarative UI framework.
+    *	UIKit: imperative UI framework.
+    *	SwiftUI: declarative UI framework.
 
 
 -	Event Handling: Manages touch, gestures, and other user interactions.
