@@ -204,3 +204,132 @@ FLOW Diagram:
     (CPU, GPU, Memory, Sensors, Battery, Network Interfaces)
 
 ```
+
+# Concurrency
+
+#### Parallel vs Concurrent vs Serial
+- Serial: Executes one task at a time, completing each before starting the next
+- Concurrent is when you share computing resources between multiple blocks using context switching so that each gets fair chance for their execution
+- parallelism is when you have multiple cores so that your tasks can actually run simultaneously
+
+## GCD
+
+#### Dispatch Queues
+
+These are queues where you can submit your tasks. GCD (Apple’s concurrency framework) is responsible for executing them efficiently on system-managed threads.
+
+- Serial Queue – Executes one task at a time, in FIFO order. Best for data consistency and thread safety.
+
+- Concurrent Queue – Starts multiple tasks in order but executes them in parallel if system resources allow.
+
+
+#### Types of Queues:
+
+- Main Queue – A special serial queue for all UI updates. Guarantees that all tasks execute on the main thread.
+
+- Global Queues – Predefined concurrent queues with predefined QoS levels:  
+.userInteractive, .userInitiated, .default, .utility, .background
+
+- Custom Queues - User-defined queues that internally use system threads.
+    * let serial = DispatchQueue(label: "com.example.serial")
+    * let concurrent = DispatchQueue(label: "com.example.concurrent", attributes: .concurrent)
+
+
+#### Task Execution
+
+- Synchronous (blocking):  
+    It waits for the submit block to get finished before continuing further.  
+    queue.sync{ }
+
+- Asynchronous (non-blocking):  
+    Its a non blocking task, it schedules the blocks and continue its execution
+    queue.async { }
+
+#### Dispatch Groups
+Used to wait for multiple asynchronous tasks to complete before proceding.  
+```
+let group = DispatchGroup()
+queue.async(group: group) { ... }
+queue.async(group: group) { ... }
+DispatchQueue.main.async(group: group) {
+    ...
+}
+group.notify(queue: .main) {
+    // Called after all tasks complete
+}
+```
+
+
+#### Dispatch Semaphore.  
+Used to control access to a resource or limit concurrency
+
+```
+let semaphore = DispatchSemaphore(value: 2)
+semaphore.wait()   // Decrements count or waits if 0
+// Critical section
+semaphore.signal() // Increments count
+```
+
+
+#### Barrier.  
+Ensures exclusive execution in a concurrent queue. 	All previously submitted tasks must finish before the barrier runs, and no new tasks start until it completes.  
+```
+queue.async(flags: .barrier) {
+    ...
+}
+```
+
+#### DispatchWorkItem.  
+A wrapper object for a block of work you can submit, cancel, or notify.  
+```
+let workItem = DispatchWorkItem {
+    print("Work item executed")
+}
+queue.async(execute: workItem)
+workItem.cancel()  // Cancels if not yet started
+```
+
+
+#### Dispatch Precondition.  
+Used to assert that code is running on a specific queue (for debugging and thread safety).
+```
+dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+```
+
+#### asyncAfter
+Schedules a task to be added to the queue after a given delay (does not block the thread). ex - 
+```
+DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+    print("Executed after 3 seconds")
+}
+```
+Internally, GCD sets a timer and enqueues the block once the deadline expires.  It delays the enqueueing of the task, not the execution of the queue itself.
+
+
+#### Deadlock.  
+A situation where two tasks are waiting on each other, causing both to hang indefinitely.
+ex - 
+```
+DispatchQueue.main.sync {
+    // Called from main thread → DEADLOCK
+}
+```
+curr --> waiting for block to gets finished.  
+block --> waiting for curr execution to gets finished
+
+#### Suspend and resume Queues.  
+You can temporarily suspend task execution in a queue:
+```
+queue.suspend()
+// ... some operations ...
+queue.resume()
+```
+``if you suspend a queue and forget to resume it, queued tasks will never execute.``
+
+
+#### QoS (Quality of Service)
+Defines the priority of a task:
+- userInteractive - Ul updates (highest priority)
+- userInitiated - Immediate results for user-initiated actions
+- utility - Time-consuming tasks (downloads, parsing)
+- background - Maintenance, syncing (lowest)
