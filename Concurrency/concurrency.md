@@ -1,8 +1,7 @@
-<div align="right">
+<a name="top"></a>
 
 [<-- back](../README.md)
 
-</div>
 
 # Concurrency
 
@@ -14,8 +13,4 @@
 ## 1. [GCD](gcd.md)
 
 
-<div align="right">
-
-[<-- back](../README.md)
-
-</div>
+[⬆️ Back to Top](#top)

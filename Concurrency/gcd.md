@@ -1,8 +1,7 @@
-<div align="right">
+<a name="top"></a>
 
 [<-- back](../Concurrency/concurrency.md)
 
-</div>
 
 ## GCD
 
@@ -298,8 +297,4 @@ queue.async {
 concurrentPerform is synchronous — it blocks the thread from which it’s called until all iterations complete. Avoid calling it directly on the main thread for heavy work to prevent UI freeze.
 
 
-<div align="right">
-
-[<-- back](../Concurrency/concurrency.md)
-
-</div>
+[⬆️ Back to Top](#top)
