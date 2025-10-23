@@ -63,8 +63,6 @@
 - `convert(_ point: CGPoint, to view: UIView?)` → converts a point from the current view's coordinate system to another view's coordinate system.
 - `convert(_ point: CGPoint, from view: UIView?)` → converts a point from another view's coordinate system to the current view's coordinate system.
 - Similarly works for CGRect. 
-- [2. ios-OS-architecture](/Others/iosOSarchi.md)
-- [3. Concurrency](Concurrency/concurrency.md)
 
 
 
