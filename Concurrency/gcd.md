@@ -1,3 +1,8 @@
+<div align="right">
+
+[<-- back](../Concurrency/concurrency.md)
+
+</div>
 
 ## GCD
 
@@ -136,7 +141,7 @@ Handling inconsistency when shared resources are accessed by multiple threads si
 - Avoid mutable shared state without synchronization
 
 
-### DispatchWorkItemFlags
+## DispatchWorkItemFlags
 #### 1. `barrier`: 
 Ensures exclusive execution in a concurrent queue.
 All previously submitted tasks must finish before the barrier runs, and no new tasks start until it completes.  
@@ -238,7 +243,7 @@ i.e.
 
 
 
-### concurrentPerform. 
+## concurrentPerform 
 - DispatchQueue.concurrentPerform(iterations:execute:) runs a loop concurrently — it executes the given block multiple times in parallel, distributing the work across multiple threads managed by GCD.
 - It’s synchronous, meaning the function waits until all iterations finish before returning.
 - Internally, GCD optimizes how many threads to use based on available CPU cores, QoS, and system load.
@@ -291,3 +296,10 @@ queue.async {
 ```
 
 concurrentPerform is synchronous — it blocks the thread from which it’s called until all iterations complete. Avoid calling it directly on the main thread for heavy work to prevent UI freeze.
+
+
+<div align="right">
+
+[<-- back](../Concurrency/concurrency.md)
+
+</div>
