@@ -1,7 +1,7 @@
 # Swift Basics — Complete Notes
 
 ## 1. Constants & Variables
-- `let` → constant (value cannot change)
+- `let` → constant (A stored value which not going to change)
 - `var` → variable (value can change)
 
 ```swift
@@ -9,9 +9,9 @@ let maxAttempts = 10
 var currentAttempt = 0
 ```
 
-- You can assign later as long as the value is set before use.
-- Multiple declarations in one line:
+- You can assign value during declaration, or later as long as the value is set before use.
 
+- Multiple declarations in one line:
 ```swift
 var x = 0.0, y = 0.0, z = 0.0
 ```
@@ -19,7 +19,7 @@ var x = 0.0, y = 0.0, z = 0.0
 ---
 
 ## 2. Type Annotations & Inference
-- Type annotation:
+- Type annotation: declaring what kind of values the constant or variable can store
 
 ```swift
 var message: String
@@ -47,12 +47,10 @@ let `class` = "value"
 ---
 
 ## 4. Printing & Interpolation
-
+print(_:separator:terminator:) --> variadic function
 ```swift
 print("Value is \(value)")
 ```
-
-- `terminator: ""` prints without newline.
 
 ---
 
@@ -97,12 +95,15 @@ UInt8.max  // 255
 ---
 
 ## 9. Type Safety
-- No implicit type conversion.
+- Swift is a type safe language - meaning no implicit conversion occurs here while performing operations.
+- No implicit type conversion(by either type annotation or type inference from the initialization)
 - Explicit conversion required:
 
 ```swift
 let value = Double(3) + 0.14
 ```
+number literals --> Int
+floating literals --> Double 
 
 ---
 
@@ -125,6 +126,7 @@ let oneMillion = 1_000_000
 ---
 
 ## 11. Numeric Conversion
+A number that won’t fit into a constant or variable prescribed type is reported as an error when your code is compiled
 ### Integer → Integer
 Explicit:
 
@@ -183,7 +185,7 @@ let http200 = (statusCode: 200, description: "OK")
 ---
 
 ## 15. Optionals
-- Represents absence of a value.
+- Can represents absence of a value.
 
 ```swift
 var x: Int? = nil
