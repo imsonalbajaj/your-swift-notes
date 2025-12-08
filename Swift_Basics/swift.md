@@ -551,3 +551,684 @@ Swift infers floating‑point literals as `Double`. Values like 0.1, 0.2, and 0.
 5. `fatalError` always stops execution.
 6. `try?` cannot convert crashes into nil.
 7. Use `guard b != 0 else { return nil }` for safe division.
+
+
+# Basic Operators — Notes
+
+## 1. Operator Categories
+- Unary → Operates on one value
+    - Prefix: -a, !a
+    - Postfix: a!
+- Binary → Operates on two values
+    - Infix: a + b, a == b
+- Ternary
+    - Only operator: a ? b : c
+
+## 2. Assignment Operator
+- Assigns right-hand value to left:  
+    ``` swift
+    var a = 5
+    a = 10
+    ```
+- Does NOT return a value (unlike C).
+    ```
+    let (x, y) = (1, 2)
+    ```
+- Supports tuple decomposition.
+    ```
+    let (x, y) = (1, 2)
+    ```
+
+## 3. Arithmetic Operators
+- `+`, `-`, `*`, `/`
+- No silent overflow (throws runtime error).
+- Overflow operators: `&+`, `&-`, `&*`
+- Strings can be concatenated with `+`.
+
+## 4. Remainder Operator
+- Behaves as remainder, not pure modulo.
+- Sign follows left operand(the right sign is going to be ignored).
+    ```
+    -9 % -4   // -1
+    ```
+
+## 5. Unary Operators
+- Unary minus inverts sign.
+    ```
+    let x = 3
+    let y = -x  // -3
+    ```
+- Unary plus returns value as-is.
+    ```
+    let a = +5 // just 5, included for symmetry
+    ```
+
+## 6. Compound Assignment
+- `+=`, `-=`, etc.
+- Do not return values.
+    ```
+    let b = a += 2 // compile error
+    ```
+
+## 7. Comparison Operators
+- `==`, `!=`, `<`, `<=`, `>`, `>=`
+- Return Bool.
+- Tuple comparison
+    - works left → right.
+    - Only valid if each element supports the operator.  
+    ```
+        (1, "a") < (2, "b")     // true
+        (3, "apple") < (3, "bird") // true
+    ```
+
+## 8. Ternary Operator
+- `condition ? a : b`
+- Shorthand for simple branching.
+
+## 9. Nil-Coalescing Operator
+- `a ?? b` unwraps optional or uses fallback.
+- Short-circuits.  
+    ```
+    Optional<T> ?? T → returns T
+    Optional<T> ?? Optional<T> → returns Optional
+    ```
+
+## 10. Range Operators
+- Closed: `a...b`
+- Half‑open: `a..<b`
+- One‑sided: `a...`, `...b`, `..<b`
+
+## 11. Logical Operators
+left associative
+
+- NOT: `!a`
+- AND: `a && b` (short-circuits)
+- OR: `a || b` (short-circuits)
+- Use parentheses for clarity.
+
+
+# Strings and Characters — Notes
+
+## 1. Overview
+- `String` is a collection of `Character` values.
+- Fully Unicode‑compliant, fast, modern implementation.
+- Value type with copy-on-write optimization.
+- Bridged to `NSString` when importing Foundation.
+
+## 2. String Literals
+### Single‑line:
+```swift
+let s = "Hello"
+```
+
+### Multiline:
+```swift
+let multi = """
+Line 1
+Line 2
+"""
+```
+
+Soft-wrapped (no newline added):
+```swift
+let soft = """
+Hello \
+World
+"""
+```
+
+Indentation of closing `"""` defines how much leading whitespace is ignored.
+
+## 3. Special Characters
+- Escapes: `\0`, `\\`, `\t`, `\n`, `\r`, `\"`, `\'`
+- Unicode scalars:
+```swift
+"\u{24}"     // $
+"\u{2665}"   // ♥
+"\u{1F496}"  // 💖
+```
+
+Multiline strings allow quotes without escaping.
+
+## 4. Extended String Delimiters
+Disable escapes:
+```swift
+#"Line1\nLine2"#
+```
+
+Enable escape inside:
+```swift
+#"Line1\#nLine2"#
+```
+
+Supports multiline with `#""" ... """#`.
+
+## 5. Empty Strings
+```swift
+var s1 = ""
+var s2 = String()
+s1.isEmpty  // true
+```
+
+## 6. Mutability
+```swift
+var a = "Hi"
+a += " there"     // OK
+
+let b = "Hi"
+b += "!"          // ❌ cannot mutate constant
+```
+
+## 7. Strings Are Value Types
+- Assigning or passing creates a copy.
+- Optimized with copy‑on‑write → actual copying only when necessary.
+
+## 8. Working with Characters
+Iterating:
+```swift
+for c in "Dog!🐶" { print(c) }
+```
+
+Character literal:
+```swift
+let mark: Character = "!"
+```
+
+String from characters:
+```swift
+String(["C","a","t","🐱"])
+```
+
+## 9. Concatenation
+```swift
+"hello" + " world"
+var s = "hi"
+s += "!"
+```
+
+Appending a Character:
+```swift
+s.append("!")
+```
+
+## 10. String Interpolation
+```swift
+let msg = "\(2 + 3) is 5"
+```
+
+With extended delimiters:
+```swift
+print(#"Value is \#(10)"#)
+```
+
+## 11. Unicode Concepts
+### Unicode Scalars
+21‑bit numbers representing characters.
+
+### Extended Grapheme Clusters
+A single `Character` = 1 or more Unicode scalars:
+```swift
+"\u{E9}"            // é
+"\u{65}\u{301}"     // e + accent → also é
+```
+
+Composite examples:
+```swift
+"\u{1F1FA}\u{1F1F8}"  // 🇺🇸
+```
+
+## 12. Counting Characters
+```swift
+"Koala 🐨".count
+```
+
+Grapheme‑cluster aware:
+```swift
+var word = "cafe"
+word.count          // 4
+word += "\u{301}"
+word.count          // still 4
+```
+
+## 13. String Indices
+Strings cannot be integer-indexed.
+
+```swift
+let s = "Guten Tag!"
+s[s.startIndex]                       
+s[s.index(before: s.endIndex)]
+s[s.index(after: s.startIndex)]
+```
+
+Out‑of‑range indexing → runtime error.
+
+Iterating indices:
+```swift
+for i in s.indices { print(s[i]) }
+```
+
+## 14. Inserting & Removing
+Insert:
+```swift
+welcome.insert("!", at: welcome.endIndex)
+welcome.insert(contentsOf: " there",
+               at: welcome.index(before: welcome.endIndex))
+```
+
+Remove:
+```swift
+welcome.remove(at: welcome.index(before: welcome.endIndex))
+welcome.removeSubrange(range)
+```
+
+## 15. Substrings
+Slices return `Substring`, not `String`.
+
+Convert for long-term storage:
+```swift
+let sub = greeting[..<index]
+let newString = String(sub)
+```
+
+Substrings share underlying storage with original string → efficient but not for long-term storage.
+
+## 16. Comparing Strings
+### Equality:
+Canonical equivalence:
+```swift
+"\u{E9}" == "\u{65}\u{301}"   // true
+```
+
+Visually similar but different meaning:
+```swift
+"A" != "А"   // Latin vs Cyrillic
+```
+
+### Prefix / Suffix:
+```swift
+scene.hasPrefix("Act 1")
+scene.hasSuffix("mansion")
+```
+
+## 17. Unicode Representations
+### UTF‑8:
+```swift
+for u in s.utf8 { print(u) }
+```
+
+### UTF‑16:
+```swift
+for u in s.utf16 { print(u) }
+```
+
+### Unicode Scalars:
+```swift
+for scalar in s.unicodeScalars {
+    print(scalar, scalar.value)
+}
+```
+
+---
+
+
+# Swift — Collection Types (Notes)
+
+Swift provides **three primary collection types**:
+
+- **Array** → Ordered collection, duplicates allowed  
+- **Set** → Unordered, unique values only  
+- **Dictionary** → Unordered key–value pairs, keys unique  
+
+All collection types are **generic**, **type-safe**, and respect **value semantics**.
+
+
+## Mutability of Collections
+
+- `var` → collection is **mutable**
+- `let` → collection is **immutable**
+- Best practice: Make collections `let` unless mutation is required.
+
+
+# Arrays
+
+## What is an Array?
+- Ordered collection of **same-typed** elements  
+- Duplicates allowed  
+- Backed by contiguous storage, optimized for random access
+
+## Array Type Syntax
+- Full form: `Array<Element>`
+- Preferred shorthand: `[Element]`
+
+Example:
+```swift
+var numbers: [Int] = [1, 2, 3]
+```
+
+## Creating Arrays
+
+### Empty array
+```swift
+var items: [Int] = []
+var items2 = [Int]()
+```
+
+### Array with default values
+```swift
+var threeDoubles = Array(repeating: 0.0, count: 3)
+```
+
+### Concatenating arrays
+```swift
+let six = a + b
+```
+
+### Array literal
+```swift
+var shoppingList = ["Eggs", "Milk"]
+```
+
+## Accessing & Modifying Arrays
+
+### Count & empty check
+```swift
+array.count
+array.isEmpty
+```
+
+### Append values
+```swift
+array.append("X")
+array += ["Y", "Z"]
+```
+
+### Access by subscript
+```swift
+let first = array[0]
+array[0] = "Updated"
+```
+
+⚠️ Out-of-range access → **runtime crash**
+
+### Replace ranges
+```swift
+array[2...4] = ["A", "B"]
+```
+
+## Insert & Remove
+```swift
+array.insert("Maple", at: 0)
+array.remove(at: 2)
+array.removeLast()
+```
+
+## Iteration
+```swift
+for item in array { }
+```
+
+With index:
+```swift
+for (index, value) in array.enumerated() { }
+```
+
+
+# Sets
+
+## What is a Set?
+- Unordered collection  
+- Unique elements  
+- Must contain **Hashable** types  
+- Very fast membership checks (`O(1)` average)
+
+## Syntax
+```swift
+var set: Set<String> = []
+var set2: Set = ["A", "B", "C"]
+```
+
+## Modifying Sets
+
+Add:
+```swift
+set.insert("Jazz")
+```
+
+Remove:
+```swift
+set.remove("Rock")
+set.removeAll()
+```
+
+Check membership:
+```swift
+set.contains("Hip hop")
+```
+
+## Iterating Sets
+```swift
+for item in set { }
+```
+
+Sorted:
+```swift
+for item in set.sorted() { }
+```
+
+## Set Operations
+```swift
+odd.union(even)
+odd.intersection(even)
+odd.subtracting(primes)
+odd.symmetricDifference(primes)
+```
+
+## Membership Relations
+```swift
+a.isSubset(of: b)
+a.isSuperset(of: b)
+a.isDisjoint(with: c)
+```
+
+
+# Dictionaries
+
+## What is a Dictionary?
+- Unordered key–value collection  
+- Keys must be **Hashable**
+- Values can be any type  
+- Updating a key replaces its previous value
+
+## Syntax
+- Full: `Dictionary<Key, Value>`
+- Shorthand: `[Key: Value]`
+
+Example:
+```swift
+var airports = ["YYZ": "Toronto Pearson", "DUB": "Dublin"]
+```
+
+## Creating Dictionaries
+
+Empty:
+```swift
+var dict: [Int: String] = [:]
+var dict2 = [Int: String]()
+```
+
+Literal:
+```swift
+var airports = ["YYZ": "Toronto", "DUB": "Dublin"]
+```
+
+## Accessing & Modifying
+
+Add / update:
+```swift
+airports["LHR"] = "London Heathrow"
+```
+
+updateValue():
+```swift
+airports.updateValue("New Name", forKey: "YYZ")
+```
+
+Read:
+```swift
+let name = airports["DUB"]  // optional
+```
+
+Remove:
+```swift
+airports["APL"] = nil
+airports.removeValue(forKey: "DUB")
+```
+
+## Iteration
+```swift
+for (code, name) in airports { }
+```
+
+Keys:
+```swift
+for key in airports.keys { }
+```
+
+Values:
+```swift
+for value in airports.values { }
+```
+
+Sorted:
+```swift
+for key in airports.keys.sorted() { }
+```
+
+# Key Takeaways
+
+### Arrays
+- Ordered, indexed, allow duplicates  
+- Subscript access must be valid  
+
+### Sets
+- Unordered, unique elements  
+- Great for fast lookups and set operations  
+
+### Dictionaries
+- Key–value storage  
+- Keys must be unique & hashable  
+- Value access returns optional
+
+
+# Swift Control Flow — Notes
+
+Swift provides powerful control-flow constructs for branching, looping, early exits, pattern matching, and deferred execution.
+
+## 1. For-In Loops
+- Iterate over arrays, dictionaries, ranges, strings, or any type conforming to `Sequence`.
+- Dictionary iteration order is not guaranteed.
+- Use `_` to ignore loop variables.
+- Use `stride(from:to:by:)` or `stride(from:through:by:)` to skip values.
+
+## 2. While Loops
+- Use when number of iterations is unknown beforehand.
+- Condition checked at start.
+- Example shown with Snakes and Ladders logic.
+
+## 3. Repeat-While Loops
+- Executes body at least once.
+- Condition checked at end.
+
+## 4. Conditional Statements
+
+### If
+- Simple or chained with `else if` and `else`.
+- Works for branching logic.
+- `if` expression allows assignment with concise syntax, all branches must produce same type.
+
+### If Expression (Swift 5.9+)
+- Allows:
+```
+let value = if condition { a } else { b }
+```
+- Must return values of same type across branches.
+
+## 5. Switch Statements
+- Must be exhaustive.
+- No implicit fallthrough.
+- Can match:
+  - Exact values
+  - Intervals
+  - Tuples
+  - Value bindings
+  - Patterns with `where`
+  - Compound cases
+
+### Interval Matching
+- Supports ranges like `1..<5`.
+
+### Tuple Matching
+- Match combinations of multiple values.
+
+### Value Binding
+- Extract matched values using `let` or `var`.
+
+### Where Clause
+- Adds additional filtering.
+
+### Compound Cases
+- Combine multiple patterns:
+```
+case "a", "A":
+```
+
+## 6. Pattern Matching in `if` and Loops
+- `if case` for matching patterns:
+```
+if case (let x, 100) = point { ... }
+```
+
+- `for-case-in` loops for iterating only matching patterns:
+```
+for case (let x, 0) in points { ... }
+```
+
+- Supports `where` for additional checks.
+
+## 7. Control Transfer Statements
+
+### continue
+- Skip current iteration.
+
+### break
+- Terminate loop or switch statement.
+
+### fallthrough
+- Explicitly continues execution into next case.
+
+## 8. Labeled Statements
+- Control exactly which loop/switch is affected by break/continue.
+```
+outerLoop: while condition { ... }
+```
+
+## 9. Early Exit — guard
+- Used for requirement checks.
+- Must exit scope in else block.
+- Unwrapped values remain available after guard.
+
+## 10. defer
+- Executes when leaving current scope.
+- Runs in reverse (LIFO) order if multiple defers are present.
+- Helpful for cleanup tasks.
+
+## 11. Checking API Availability
+- Ensures API is available on current platform.
+```
+if #available(iOS 10, macOS 10.12, *) { ... }
+```
+- `#unavailable` for inverse checks.
+- With guard:
+```
+guard #available(iOS 10, *) else { return }
+```
