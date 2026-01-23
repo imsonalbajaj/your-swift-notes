@@ -443,6 +443,93 @@ performAction(on: donald)
 This enables composition over inheritance,
 allowing types to adopt multiple independent behaviors flexibly.
 
+
+
+
+---
+
+## 🧠 static vs dynamic dispatch
+Swift uses both static and dynamic dispatch, depending on the type and how the method is declared.
+Dynamic Dispatch:
+- Happens at runtime
+- The exact method to call is determined based on the object’s actual type
+- Enables polymorphism
+
+Static Dispatch:
+- Happens at compile time
+- The compiler knows exactly which method to call
+- Faster (no runtime lookup)
+
+Dispatch Rules in Swift
+Static Dispatch	Dynamic Dispatch
+Resolved at compile time	Resolved at runtime
+Used by structs, enums, final methods, static methods, free functions	Used by class methods that can be overridden
+Used by protocol extension–only methods	Used by protocol requirements
+No runtime lookup (no vtable / witness table)	Uses vtable (classes) or witness table (protocols)
+Faster	Slightly slower
+Example: Dynamic Dispatch with Classes
+class Animal {
+    func speak() { print("Animal sound") }
+}
+
+class Dog: Animal {
+    override func speak() { print("Bark") }
+}
+
+let pet: Animal = Dog()
+pet.speak() // Dynamic dispatch → "Bark"
+
+
+✔️ Even though pet is typed as Animal, Swift calls Dog.speak()
+✔️ This happens via vtable lookup
+
+Structs and Enums
+
+Do not support inheritance
+
+Cannot override methods
+
+Always use static dispatch
+
+struct Cat {
+    func speak() { print("Meow") }
+}
+
+let c = Cat()
+c.speak() // Static dispatch
+
+Important Swift-Specific Notes (Add This 👇)
+override itself does not cause dynamic dispatch
+
+Dynamic dispatch happens because the method is non-final and overridable
+
+Marking a method final forces static dispatch
+
+class A {
+    final func foo() {}
+}
+
+Protocol Dispatch (Common Pitfall)
+Protocol Method Type	Dispatch
+Protocol requirement	Dynamic (witness table)
+Default implementation of requirement	Dynamic
+Method only in protocol extension	Static
+protocol P {
+    func f()
+}
+
+extension P {
+    func f() { print("default") }
+}
+
+
+✔️ If a conforming type implements f(), it will be called even via protocol type
+
+One-Line Summary (Perfect for Notes)
+
+Classes use dynamic dispatch for overridable methods; structs and enums always use static dispatch; protocol requirements are dynamically dispatched, but protocol extension-only methods are statically dispatched.
+
+
 ---
 
 ## 🧠 OOPs Concepts in Swift
