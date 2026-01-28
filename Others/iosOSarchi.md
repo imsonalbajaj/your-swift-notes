@@ -1,6 +1,6 @@
 <a name="top"></a>
 
-[<-- back](../Content.md)
+[<-- back](../README.md)
 
 # iOS architecture
 
