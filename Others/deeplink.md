@@ -9,9 +9,9 @@ Deep links open the app only if it is installed; otherwise the system cannot res
 
 ```
 //ex - this func open whatsapp from your app
-static func navigateToWhatsApp(text:String,mobile:String){
+func openWhatsApp(msgStr: String, for num :String){
         
-    let urlWhats = "whatsapp://send?phone=\(mobile)&text=\(text)"
+    let urlWhats = "whatsapp://send?phone=\(num)&text=\(msgStr)"
     if let urlString = urlWhats.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
         if let whatsappURL = URL(string: urlString) {
             if UIApplication.shared.canOpenURL(whatsappURL) {
