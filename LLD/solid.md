@@ -25,6 +25,8 @@
     - Depend on abstractions, not on concrete implementations.
     - violations: clases have implicit concrete initialization of objects
 
+
+
 ## SRP(Single Responsibility Principle):
 **SRP states that a class should have only one reason to change, meaning it should handle only one responsibility, such as business logic or persistence, but not both.**
 

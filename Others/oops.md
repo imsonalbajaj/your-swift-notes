@@ -556,97 +556,6 @@ let tesla = Car(brand: "Tesla")
 tesla.drive()
 ```
 
----
-
-### 2. **Encapsulation**
-Encapsulation is the concept of data hiding and exposes only what’s necessary using access control keywords like `private`, `internal`, and `public`.
-Hiding data (internal state) from outside access.
-
-```swift
-class Account {
-    private var balance: Double = 0.0
-    
-    func deposit(amount: Double) {
-        balance += amount
-    }
-    
-    func getBalance() -> Double {
-        return balance
-    }
-}
-```
-
----
-
-### 3. **Abstraction**
-Abstraction hides complex implementation details and exposes a simple interface. Swift achieves this using **protocols**.
-Hiding implementation details while exposing only essential features.
-
-```swift
-protocol Vehicle {
-    func start()
-}
-
-class Bike: Vehicle {
-    func start() {
-        print("Bike started")
-    }
-}
-```
-
----
-
-### 4. **Inheritance**
-Inheritance allows a class to derive from another class, reusing and extending its functionality.
-Swift supports single inheritance, meaning a class can inherit from only one superclass directly. This solve multiple inheritance diamond problem
-
-```swift
-class Vehicle {
-    func move() {
-        print("Vehicle moving")
-    }
-}
-
-class Car: Vehicle {
-    func honk() {
-        print("Car honking")
-    }
-}
-
-let car = Car()
-car.move()
-car.honk()
-```
-
----
-
-### 5. **Polymorphism**
-Polymorphism is the multiple interpretation of same name method.
-
-#### a) Compile-time (Overloading)
-same function name, different parameters
-```swift
-class Math {
-    func add(a: Int, b: Int) -> Int { a + b }
-    func add(a: Double, b: Double) -> Double { a + b }
-}
-```
-
-#### b) Runtime (Overriding)
-subclass provides a specific implementation of a superclass method
-use override 
-```swift
-class Animal {
-    func sound() { print("Some sound") }
-}
-
-class Dog: Animal {
-    override func sound() { print("Bark") }
-}
-
-let dog: Animal = Dog()
-dog.sound()
-```
 
 ---
 
@@ -711,21 +620,5 @@ class Duck: Flyable, Swimmable {
     func swim() { print("Duck swimming") }
 }
 ```
-
----
-
-### ✅ **Summary Table**
-
-| Concept | Swift Feature Used |
-|----------|-------------------|
-| Class/Object | `class`, `init()`, instances |
-| Encapsulation | Access control modifiers |
-| Abstraction | Protocols, base classes |
-| Inheritance | `class` inheritance |
-| Polymorphism | Overloading, overriding |
-| Composition | Protocols & extensions |
-| Dynamic Dispatch | `override` methods |
-
----
 
 [⬆️ Back to Top](#top)
