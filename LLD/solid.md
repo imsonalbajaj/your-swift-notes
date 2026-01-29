@@ -6,23 +6,23 @@
 # SOLID
 
 1. SRP:
-    - a class should have only one responsibility
+    - A class should have only one reason to change.
     - violations: if class handling multiple responsibilities ex - a UIViewController handling UI, api fetching and data validation logic
 
 2. OCP:
-    - open for extension but closed for modification 
+    - Software entities should be open for extension but closed for modification. 
     - violations: if a class method have large if else blocks, or long switch cases statements
 
 3. LSP:
-    - Subclasses must be substitutable for their base classes. Means we child class method shouldn’t change the behavior of parent class methods
+    - Subclasses must be substitutable for their base classes without breaking expected behavior.
     - violations: when subclass changes the behavior of objects, ex a overridden subclass method fatalError which is not available in based class method
 
 4. ISP:
-    - segregate a interface into multiple, so that we don’t have to unnecessarily implement other methods.
+    - Clients should not be forced to depend on methods they do not use.
     - violations: big fat protocols or classes implementing protocols method with empty function body.
 
 5. DIP:
-    - Depend on abstraction not on the concrete implementations
+    - Depend on abstractions, not on concrete implementations.
     - violations: clases have implicit concrete initialization of objects
 
 ## SRP(Single Responsibility Principle):
