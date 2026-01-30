@@ -6,20 +6,6 @@
 
 # OOP's
 
-1. Abstraction
-    - Expose only what’s necessary, hide implementation details(using protocols).
-
-2. Inheritance(is-a relation)
-    - One class acquires properties & methods of another class.
-    - limitation(tight - coupling) --> sol'n - composition
-
-3. Encapsulation
-    - Bundling data + methods together and controlling access using access specifiers.
-
-4. Polymorphism
-    - Same interface, different behavior
-
-
 ## Abstraction:
 Abstraction hides complex implementation details and exposes a simple interface. Swift achieves this using **protocols**.
 

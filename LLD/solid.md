@@ -5,28 +5,6 @@
 
 # SOLID
 
-1. SRP:
-    - A class should have only one reason to change.
-    - violations: if class handling multiple responsibilities ex - a UIViewController handling UI, api fetching and data validation logic
-
-2. OCP:
-    - Software entities should be open for extension but closed for modification. 
-    - violations: if a class method have large if else blocks, or long switch cases statements
-
-3. LSP:
-    - Subclasses must be substitutable for their base classes without breaking expected behavior.
-    - violations: when subclass changes the behavior of objects, ex a overridden subclass method fatalError which is not available in based class method
-
-4. ISP:
-    - Clients should not be forced to depend on methods they do not use.
-    - violations: big fat protocols or classes implementing protocols method with empty function body.
-
-5. DIP:
-    - Depend on abstractions, not on concrete implementations.
-    - violations: clases have implicit concrete initialization of objects
-
-
-
 ## SRP(Single Responsibility Principle):
 **SRP states that a class should have only one reason to change, meaning it should handle only one responsibility, such as business logic or persistence, but not both.**
 
@@ -521,7 +499,7 @@ Details should depend on abstractions.
 —> Business logic should not care about implementation details.
 
 Ex1 - The problem with our is that high level module Research is dependent on the concrete class Relationships
-**
+```
 enum Relationship
 {
   case parent
@@ -562,9 +540,9 @@ class Research
     }
   }
 }
-**
+```
 // Fix - 
-**
+```
 protocol RelationshipBrowser
 {
   func findAllChildrenOf(_ name: String) -> [Person]
@@ -589,6 +567,6 @@ class Research
     }
   }
 }
-**
+```
 
 [⬆️ Back to Top](#top)
