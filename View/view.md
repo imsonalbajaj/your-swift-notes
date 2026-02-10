@@ -951,57 +951,63 @@ SwiftUI becomes challenging in scenarios requiring highly imperative control, co
 
 
 # SONAL
-- swift-ui recomputation and re-renders
 
-In SwiftUI, a view is re-rendered when a source of truth such as @State, @Binding, @ObservedObject, or @EnvironmentObject changes. Since SwiftUI views are value types, a state change triggers body recomputation. SwiftUI builds a new value-based view tree and diffs it against the previous tree using view identity. Only the parts of the hierarchy whose identity or input data has changed are updated, while the rest remain unchanged.
+## how swift-ui recomputes and rerenders
 
-- id in swift-ui
-    Its based on the position + identity markers of the view, not on the content
-    ```
-    VStack {
-        Text("A")   // identity #1
-        Text("B")   // identity #2
-    }
-    ```
+In SwiftUI, a view is re-rendered when a source of truth such as @State, @Binding, @ObservedObject, or @EnvironmentObject changes. Since SwiftUI views are value types, a state change triggers body recomputation. SwiftUI builds a new value-based view tree and diffs it against the previous tree using view identity. Only the parts of the hierarchy whose identity or input data has changed are updated, while the rest remain unchanged.  
+Recomputation is cheap, rendering is expensive.
 
-    so if these two text swap places 
-    like ```
-    VStack {
-        Text("B")   // identity #1
-        Text("A")   // identity #2
-    }
-    SwiftUI thinks: The first Text changed from A → B. The second Text changed from B → A. It does not think they swapped places.
-
-- problems without stable identity
-    ```
-    ForEach(items.indices, id: \.self) { index in
-        Text(items[index].name)
-    }
-    ```
-    If items changes order:
-        - SwiftUI identifies views by index --> Views get reused incorrectly --> Animations/state break 💥
+## identity in swift-ui
+It is based on the position + identity markers of the view, not on the content
 
 
-- correct approach
-    ```
-    ForEach(items, id: \.id) { item in
-        Text(item.name)
-    }
-    ```
-    Now identity is:
-    - Stable, and Data-driven
-    - SwiftUI knows which item is which --> 📌 ForEach id defines identity of child views.
+```
+VStack {
+    Text("A")   // identity #1
+    Text("B")   // identity #2
+}
+```
+so if these two text swap places, like- 
+```
+VStack {
+    Text("B")   // identity #1
+    Text("A")   // identity #2
+}
+```
+
+SwiftUI thinks: The first Text changed from A → B. The second Text changed from B → A. It does not think they swapped places.
+
+### problems without stable identity
+ex - 
+```
+ForEach(items.indices, id: \.self) { index in
+    Text(items[index].name)
+}
+```
+If items changes order:
+SwiftUI identifies views by index --> Views get reused incorrectly --> Animations/state break 💥
 
 
 
-- .id() modifier (forces identity change).  
-    This is very different.
-    ```
-    Text("Hello")
-        .id(userId)
-    ```
-    - What this means: “If userId changes, treat this as a COMPLETELY NEW view.”
-    - SwiftUI will: Destroy old view --> Reset all state --> Create a new instance
+#### correct approach
+```
+ForEach(items, id: \.id) { item in
+    Text(item.name)
+}
+```
+Now identity is:
+- Stable, and Data-driven
+- SwiftUI knows which item is which --> 📌 ForEach id defines identity of child views.
+
+
+.id() modifier (forces identity change).  
+- This is very different.
+```
+Text("Hello")
+    .id(userId)
+```
+- What this means: “If userId changes, treat this as a COMPLETELY NEW view.”
+- SwiftUI will: Destroy old view --> Reset all state --> Create a new instance
 
 
 ** Changing data does NOT change identity. Changing structure or id DOES. **
